@@ -8,101 +8,92 @@ import argparse
 from storage import Storage
 from models.user import User
 from models.project import Project
+from models.task import Task
 
 
 def main():
-    '''
-    CLI entry point.
-    Uses argparse to define subcommands.
-    '''
+    # CLI entry point.
+    # Uses argparse to define subcommands.
 
-    # ArgumentParser handles CLI input and help messages.
     parser = argparse.ArgumentParser(
         description="Project Management CLI"
     )
 
-    # Subparsers allow multiple commands.
-    # Each command has its own arguments.
     subparsers = parser.add_subparsers(dest="command")
 
-    # add-user command
+    # User commands
+    # add-user
     add_user = subparsers.add_parser("add-user")
     add_user.add_argument("--name", required=True)
     add_user.add_argument("--email", required=False)
 
-    # list-users command
+    # list-users
     subparsers.add_parser("list-users")
 
-    # add-project command
+    # Project command
+    # add-project
     add_project = subparsers.add_parser("add-project")
     add_project.add_argument("--user-id", type=int, required=True)
     add_project.add_argument("--title", required=True)
     add_project.add_argument("--description", required=False)
 
-    # list-projects command
+    # list-projects
     list_projects = subparsers.add_parser("list-projects")
     list_projects.add_argument("--user-id", type=int, required=False)
 
-    # Parse CLI arguments into args object.
-    # args.command tells us which subcommand was used.
+    # Task commands
+    # add-task
+    add_task = subparsers.add_parser("add-task")
+    add_task.add_argument("--project-id", type=int, required=True)
+    add_task.add_argument("--title", required=True)
+
+    # list-tasks
+    list_tasks = subparsers.add_parser("list-tasks")
+    list_tasks.add_argument("--project-id", type=int, required=True)
+
+    # complete-task
+    complete_task = subparsers.add_parser("complete-task")
+    complete_task.add_argument("--project-id", type=int, required=True)
+    complete_task.add_argument("--task-id", type=int, required=True)
+
     args = parser.parse_args()
 
-    # Initialize storage and load existing data.
-    # Persistence: data is loaded before modification.
     storage = Storage()
     data = storage.load_data()
-
-    # Deserialize dictionaries into objects.
-    # users and projects become Python objects.
     users, projects = storage.deserialize(data)
 
-    # Command handling
-    # Each branch handles a specific command.
-    # After modification, data is serialized and saved.
-
+    # Command logic
     if args.command == "add-user":
-        # Create User object from CLI input.
         user = User(name=args.name, email=args.email or "")
-
-        # Add user to collection.
         users.append(user)
 
-        # Save updated data.
         data = storage.serialize(users, projects)
         storage.save_data(data)
 
         print(f"User added: {user}")
 
     elif args.command == "list-users":
-        # Display all users.
-        # __str__ method of User is used for output.
         for user in users:
             print(user)
 
     elif args.command == "add-project":
-        # Create Project object.
         project = Project(
             title=args.title,
             description=args.description or ""
         )
 
-        # Link project to user (one-to-many relationship).
-        # Find user by ID and add project.
         for user in users:
             if user.id == args.user_id:
                 user.add_project(project)
                 projects.append(project)
                 break
 
-        # Save changes.
         data = storage.serialize(users, projects)
         storage.save_data(data)
 
         print("Project added")
 
     elif args.command == "list-projects":
-        # If user-id provided, list only that user's projects.
-        # Otherwise, list all projects.
         if args.user_id:
             for user in users:
                 if user.id == args.user_id:
@@ -112,6 +103,41 @@ def main():
             for project in projects:
                 print(project)
 
+    # Task logic
+    elif args.command == "add-task":
+        for project in projects:
+            if project.id == args.project_id:
+                task = Task(title=args.title)
+                project.add_task(task)
+                break
+
+        data = storage.serialize(users, projects)
+        storage.save_data(data)
+
+        print("Task added")
+
+    elif args.command == "list-tasks":
+        for project in projects:
+            if project.id == args.project_id:
+                for task in project.list_tasks():
+                    print(task)
+
+    elif args.command == "complete-task":
+        for project in projects:
+            if project.id == args.project_id:
+                for task in project.tasks:
+                    if task.id == args.task_id:
+                        task.status = "Completed"
+                        break
+
+        data = storage.serialize(users, projects)
+        storage.save_data(data)
+
+        print("Task marked as completed")
+
     else:
-        # No valid command → show help.
         parser.print_help()
+
+
+if __name__ == "__main__":
+    main()

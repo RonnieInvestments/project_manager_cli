@@ -1,0 +1,21 @@
+{
+    "users": [
+        {
+            "id": 1,
+            "name": "Alex",
+            "email": "",
+            "projects": [
+                1
+            ]
+        }
+    ],
+    "projects": [
+        {
+            "id": 1,
+            "title": "CLI",
+            "description": "",
+            "due_date": null,
+            "tasks": []
+        }
+    ]
+}

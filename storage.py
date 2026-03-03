@@ -60,10 +60,22 @@ class Storage:
         users = []
         projects = []
 
-        for user_data in data.get("users", []):
-            users.append(User.from_dict(user_data))
-
+        # First create project objects
         for project_data in data.get("projects", []):
             projects.append(Project.from_dict(project_data))
+
+        # Then create user objects and link projects
+        for user_data in data.get("users", []):
+
+            user = User.from_dict(user_data)
+
+            # Link project IDs to project objects
+            for project_id in user_data.get("projects", []):
+
+                for project in projects:
+                    if project.id == project_id:
+                        user.add_project(project)
+
+            users.append(user)
 
         return users, projects

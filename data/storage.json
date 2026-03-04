@@ -2,17 +2,31 @@
     "users": [
         {
             "id": 1,
-            "name": "Alex",
+            "name": "Ronaldo",
             "email": "",
             "projects": [
-                1
+                1,
+                2
             ]
+        },
+        {
+            "id": 2,
+            "name": "Test",
+            "email": "",
+            "projects": []
         }
     ],
     "projects": [
         {
             "id": 1,
             "title": "CLI",
+            "description": "",
+            "due_date": null,
+            "tasks": []
+        },
+        {
+            "id": 2,
+            "title": "Test Project",
             "description": "",
             "due_date": null,
             "tasks": []

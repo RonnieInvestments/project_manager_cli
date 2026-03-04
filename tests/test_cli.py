@@ -41,7 +41,7 @@ def test_add_project():
     if os.path.exists("data/storage.json"):
         os.remove("data/storage.json")
 
-    run(["python3", "main.py", "add-user", "--name", "Alex"])
+    run(["python3", "main.py", "add-user", "--name", "Ronaldo"])
 
     # get user id (first user will be id=1)
     run(["python3", "main.py", "add-project", "--user-id", "1", "--title", "CLI"])

@@ -49,7 +49,8 @@ class User:
             user_id = data["id"]
         )
 
-        # keep ID counter ahead of loaded IDs
+        # Keep ID counter ahead of loaded IDs -> Data integrity (prevent duplicate IDs)
+        # Each new object increases counter
         if data["id"] >= cls.id_counter:
             cls.id_counter = data["id"] + 1
 

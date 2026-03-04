@@ -4,7 +4,7 @@
 
 class Task:
 
-    # Id counter variable to help auto-generate id
+    # ID counter variable to help auto-generate id
     id_counter = 1
 
     # Constructor method to initialize the class

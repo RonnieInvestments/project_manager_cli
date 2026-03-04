@@ -6,11 +6,18 @@
             "email": "",
             "projects": [
                 1,
-                2
+                2,
+                3
             ]
         },
         {
             "id": 2,
+            "name": "Test",
+            "email": "",
+            "projects": []
+        },
+        {
+            "id": 3,
             "name": "Test",
             "email": "",
             "projects": []
@@ -26,6 +33,13 @@
         },
         {
             "id": 2,
+            "title": "Test Project",
+            "description": "",
+            "due_date": null,
+            "tasks": []
+        },
+        {
+            "id": 3,
             "title": "Test Project",
             "description": "",
             "due_date": null,
